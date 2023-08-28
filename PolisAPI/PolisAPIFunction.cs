@@ -16,7 +16,7 @@ public class PolisAPIFunction
 {
     static List<PolisCrimes> CrimeList = new();
 
-    [FunctionName("SecureFunction")]
+    [FunctionName("CrimeByCity")]
     public static async Task<IActionResult> Run(
         [HttpTrigger(AuthorizationLevel.Function, "get", Route = "City")] HttpRequest req,
         ILogger log)
