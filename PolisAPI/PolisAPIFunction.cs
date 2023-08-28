@@ -15,21 +15,18 @@ namespace PolisAPI;
 public class PolisAPIFunction
 {
     static List<PolisCrimes> CrimeList = new();
+    static HttpClient client = new();
 
-    [FunctionName("CrimeByCity")]
-    public static async Task<IActionResult> Run(
+    [FunctionName("CrimeByCityList")]
+    public static async Task<IActionResult> GetAllImagesFromGallery(
         [HttpTrigger(AuthorizationLevel.Function, "get", Route = "City")] HttpRequest req,
         ILogger log)
     {
         try
         {
-            string functionKey = req.Headers["Authorization"]; // Retrieve the Authorization header
             string searchWord = req.Query["searchWord"];
             string apiUrl = $"http://polisen.se/api/events?locationName={searchWord}";
 
-            using (HttpClient client = new HttpClient())
-            {
-                client.DefaultRequestHeaders.Add("Authorization", functionKey); // Pass the function key in the Authorization header
                 HttpResponseMessage response = await client.GetAsync(apiUrl);
                 string content = await response.Content.ReadAsStringAsync();
 
@@ -42,7 +39,7 @@ public class PolisAPIFunction
                 List<PolisCrimes> crimeList = JsonConvert.DeserializeObject<List<PolisCrimes>>(content);
 
                 return new OkObjectResult(crimeList);
-            }
+            
         }
         catch (Exception ex)
         {
