@@ -16,18 +16,20 @@ public class PolisAPIFunction
 {
     static List<PolisCrimes> CrimeList = new();
 
-    [FunctionName("CrimeByCityList")]
-    public static async Task<IActionResult> GetAllImagesFromGallery(
+    [FunctionName("SecureFunction")]
+    public static async Task<IActionResult> Run(
         [HttpTrigger(AuthorizationLevel.Function, "get", Route = "City")] HttpRequest req,
         ILogger log)
     {
         try
         {
+            string functionKey = req.Headers["Authorization"]; // Retrieve the Authorization header
             string searchWord = req.Query["searchWord"];
             string apiUrl = $"http://polisen.se/api/events?locationName={searchWord}";
 
             using (HttpClient client = new HttpClient())
             {
+                client.DefaultRequestHeaders.Add("Authorization", functionKey); // Pass the function key in the Authorization header
                 HttpResponseMessage response = await client.GetAsync(apiUrl);
                 string content = await response.Content.ReadAsStringAsync();
 
