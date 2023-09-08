@@ -18,7 +18,7 @@ public class PolisAPIFunction
     static HttpClient client = new();
 
     [FunctionName("CrimeByCityList")]
-    public static async Task<IActionResult> GetAllImagesFromGallery(
+    public static async Task<IActionResult> GetAllCrimes(
         [HttpTrigger(AuthorizationLevel.Function, "get", Route = "City")] HttpRequest req,
         ILogger log)
     {
